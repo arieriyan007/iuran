@@ -267,8 +267,8 @@ include '../db.php';
                                         <th>#</th>
                                         <th>Nama Sekolah</th>
                                         <th>Bulan iuran</th>
-                                        <th>Jumlah</th>
                                         <th>Tgl Bayar</th>
+                                        <th>Jumlah</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -283,14 +283,15 @@ include '../db.php';
 
                                 $no = 1;
                                 $pembayaran = mysqli_query($conn, "SELECT 
-                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah 
+                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah, sekolah.id_sekolah 
                                 FROM pembayaran
                                 JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
                                 $where ORDER BY pembayaran.tgl_pembayaran DESC");
                                 ?>
                                 <tbody>
                                     <?php foreach ($pembayaran as $pem) :
-                                        $id = $pem['id']; ?>
+                                        $id = $pem['id'];
+                                    ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td><?= $pem['nama_sekolah']; ?></td>
@@ -299,7 +300,78 @@ include '../db.php';
                                             <td><?= $pem['jumlah_pembayaran']; ?></td>
                                             <td>
                                                 <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi">Print</a>
-                                                <a href="" class="btn btn-sm btn-warning" title="Edit Data">Edit</a>
+                                                <!-- edit -->
+                                                <!-- button modal -->
+                                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit<?= $id; ?>" title="Edit data iuran">
+                                                    <i class="bi bi-box-arrow-up"></i> Edit
+                                                </button>
+
+                                                <!-- edit modal -->
+                                                <div class="modal fade" id="edit<?= $id; ?>">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <!-- edit header -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Edit data iuaran</h4>
+                                                                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+                                                            </div>
+
+                                                            <!-- edit body -->
+                                                            <form action="editIuran.php" method="post">
+                                                                <div class="modal-body">
+                                                                    <label for="sekolah">Pilih Sekolah :</label>
+                                                                    <select name="sekolah" id="sekolah" class="form-select">
+                                                                        <option><?= $pem['nama_sekolah']; ?></option>
+                                                                    </select>
+                                                                    <input type="hidden" name="id_sekolah" value="<?= $pem['id_sekolah']; ?>">
+                                                                    <!-- Bulan -->
+                                                                    <label class="mt-2">Pembayaran untuk bulan:</label>
+                                                                    <div class="row">
+                                                                        <?php
+                                                                        $bulanArr = [
+                                                                            'Januari',
+                                                                            'Februari',
+                                                                            'Maret',
+                                                                            'April',
+                                                                            'Mei',
+                                                                            'Juni',
+                                                                            'Juli',
+                                                                            'Agustus',
+                                                                            'September',
+                                                                            'Oktober',
+                                                                            'November',
+                                                                            'Desember'
+                                                                        ];
+                                                                        // menampilkan cekbox jika hasil nama bulan menggunakan spasi tambahkan array_map('trim', explod(',',$pem['pembayaran_ke])) : [];
+                                                                        $bulanDipilih = isset($pem) ? array_map('trim', explode(',', $pem['pembayaran_ke'])) : [];
+
+                                                                        foreach ($bulanArr as $bln) {
+                                                                            $checked = in_array($bln, $bulanDipilih) ? 'checked' : '';
+                                                                            echo '
+                                                                            <div class="col-md-4">
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" name="pembayaran_ke[]" value="' . $bln . '" id="bulan_' . $bln . '" ' . $checked . '>
+                                                                                    <label class="form-check-label" for="bulan_' . $bln . '">' . $bln . '</label>
+                                                                                </div>
+                                                                            </div>';
+                                                                        }
+                                                                        ?>
+                                                                    </div>
+
+                                                                    <input type="date" name="tgl" class="my-2 form-control" value="<?= $pem['tgl_pembayaran']; ?>">
+                                                                    <input type="text" name="jumlah" placeholder="silahkan ubah jumlah biaya iuran..." value="<?= htmlspecialchars('Rp ' . $pem['jumlah_pembayaran']); ?>" class="form-control">
+                                                                    <input type="hidden" name="idi" value="<?= $id; ?>">
+                                                                </div>
+
+                                                                <!-- Edit footer -->
+                                                                <div class="modal-foter text-end mx-2 my-2">
+                                                                    <button class="btn btn-primary btn-sm" type="submit" name="update">Update</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <a href="" class="btn btn-sm btn-danger" title="Hapus Data">Hapus</a>
                                             </td>
                                         </tr>
