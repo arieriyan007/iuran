@@ -120,14 +120,14 @@ include '../db.php';
             <li class="nav-heading">Menu</li>
 
             <li class="nav-item">
-                <a class="nav-link " href="pembayaran.php">
+                <a class="nav-link " href="pengeluaran.php">
                     <i class="bi bi-person"></i>
-                    <span>Pembayaran</span>
+                    <span>Pengeluaran</span>
                 </a>
             </li><!-- End Profile Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="laporan.php">
+                <a class="nav-link collapsed" href="laporanKeluar.php" target="_blank">
                     <i class="bi bi-file-earmark"></i>
                     <span>Laporan</span>
                 </a>
@@ -140,11 +140,11 @@ include '../db.php';
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Data Pembayaran</h1>
+            <h1>Data Pengeluaran</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Pembayaran</li>
+                    <li class="breadcrumb-item active">Pengeluaran</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -157,10 +157,10 @@ include '../db.php';
                     <div class="card">
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <h5 class="card-title mb-0">Data Sekolah</h5>
+                                <h5 class="card-title mb-0">Dana Pengeluaran</h5>
                                 <!-- button modal -->
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#myPembayaran">
-                                    Tambah Pembayaran
+                                    Tambah Pengeluaran
                                 </button>
                             </div>
 
@@ -171,62 +171,21 @@ include '../db.php';
 
                                         <!-- Modal Header -->
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Pembayaran iuran</h4>
+                                            <h4 class="modal-title">Dana Pengeluaran</h4>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
 
                                         <!-- Modal body -->
-                                        <form action="pembayaranBaru.php" method="post">
-                                            <?php
-                                            $query = "select * from sekolah";
-                                            $s = $conn->query($query);
-                                            ?>
+                                        <form action="pengeluaranBaru.php" method="post">
                                             <div class="modal-body">
-                                                <!-- <input type="text" name="sekolah" placeholder="Nama sekolah" class="form-control" required> -->
-                                                <label for="sekolah">Pilih Sekolah :</label>
-                                                <select name="sekolah" id="sekolah" class="form-select">
-                                                    <option value="">- pilih sekolah -</option>
-                                                    <?php
-                                                    while ($sekolah = $s->fetch_assoc()): ?>
-                                                        <option value="<?= $sekolah['id_sekolah']; ?>"><?= $sekolah['nama_sekolah']; ?></option>
-                                                    <?php endwhile; ?>
-                                                </select>
-
-                                                <!-- <input type="number" name="pembayaran" placeholder="Pembayaran ke- ..." autocomplete="off" class="form-control my-2"> -->
-                                                <label>Pembayaran untuk bulan:</label>
-                                                <div class="row">
-                                                    <?php
-                                                    $bulan = [
-                                                        'Januari',
-                                                        'Februari',
-                                                        'Maret',
-                                                        'April',
-                                                        'Mei',
-                                                        'Juni',
-                                                        'Juli',
-                                                        'Agustus',
-                                                        'September',
-                                                        'Oktober',
-                                                        'November',
-                                                        'Desember'
-                                                    ];
-                                                    foreach ($bulan as $nama) {
-                                                        echo '
-                                                        <div class="col-md-4">
-                                                            <div class="form-check">
-                                                           <input class="form-check-input" type="checkbox" name="pembayaran_ke[]" value="' . $nama . '" id="bulan_' . $nama . '">
-                                                            <label class="form-check-label" for="bulan_' . $nama . '">' . $nama . '</label>
-                                                            </div>
-                                                        </div>';
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <input type="date" name="tglBayar" placeholder="tgl bayar" autocomplete="off" class="form-control my-2">
-                                                <input type="text" name="jumlah" placeholder="Jumlah Pembayaran ..." autocomplete="off" class="form-control my-2">
+                                                <label for="sekolah">Dana keluar :</label>
+                                                <input type="text" name="danaKeluar" placeholder="Keterangan dana keluar..." class="form-control my-2" required>
+                                                <input type="date" name="tglKeluar" autocomplete="off" class="form-control my-2">
+                                                <input type="number" name="jumlahKeluar" placeholder="Jumlah dana keluar..." autocomplete="off" class="form-control my-2">
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-info btn-sm" data-bs-dismiss="modal" name="addPembayaran">Simpan</button>
+                                                <button type="submit" class="btn btn-info btn-sm" data-bs-dismiss="modal" name="addPengeluaran">Simpan</button>
                                             </div>
                                         </form>
                                     </div>
@@ -257,7 +216,7 @@ include '../db.php';
                                 </select>
 
                                 <button type="submit" class="btn btn-primary">Filter</button>
-                                <a href="pembayaran.php" class="btn btn-secondary">Reset</a>
+                                <a href="pengeluaran.php" class="btn btn-secondary">Reset</a>
                             </form>
                             <!-- end filter -->
 
@@ -266,9 +225,8 @@ include '../db.php';
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama Sekolah</th>
-                                        <th>Bulan iuran</th>
-                                        <th>Tgl Bayar</th>
+                                        <th>Ket Dana Keluar</th>
+                                        <th>Tgl Keluar</th>
                                         <th>Jumlah</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -296,7 +254,6 @@ include '../db.php';
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td><?= $pem['nama_sekolah']; ?></td>
-                                            <td><?= $pem['pembayaran_ke']; ?></td>
                                             <td><?= $pem['tgl_pembayaran']; ?></td>
                                             <td><?= $pem['jumlah_pembayaran']; ?></td>
                                             <td>

@@ -1,6 +1,7 @@
 <?php
-include 'db.php';
-session_start();
+// require_once 'auth.php';
+require_once 'db.php';
+// session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +35,9 @@ session_start();
     <link href="assets/css/style.css" rel="stylesheet">
 
 </head>
+
+<!-- Tambahkan CDN Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
 
@@ -69,12 +73,12 @@ session_start();
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="assets/img/kosong.jpg" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['username'] ?? 'Pengguna'; ?></span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['username'] ?? 'SDN PP 2'; ?></span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6><?php echo $_SESSION['username'] ?? 'Pengguna'; ?></h6>
+                            <h6><?php echo $_SESSION['username'] ?? 'SDN PP 2'; ?></h6>
                             <span><?php echo $_SESSION['nama'] ?? 'Admin'; ?></span>
                         </li>
                         <li>
@@ -118,6 +122,13 @@ session_start();
             </li><!-- End Profile Page Nav -->
 
             <li class="nav-item">
+                <a class="nav-link collapsed" href="pages/pengeluaran.php">
+                    <i class="bi bi-person"></i>
+                    <span>Pengeluaran</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="pages/kartu_iuran.php" target="_blank">
                     <i class="bi bi-printer"></i>
                     <span>Kartu Iuran</span>
@@ -154,7 +165,7 @@ session_start();
                 <div class="col-lg-12">
                     <div class="row">
 
-                        <!-- Sales Card -->
+                        <!-- Pembayaran Card -->
                         <div class="col-xxl-4 col-md-6">
                             <div class="card info-card sales-card">
 
@@ -178,7 +189,33 @@ session_start();
                                 </div>
 
                             </div>
-                        </div><!-- End Sales Card -->
+                        </div><!-- End Pembayaran Card -->
+
+                        <!-- Pengeluaran Card -->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card sales-card">
+
+                                <div class="card-body">
+                                    <h5 class="card-title">Total <span>| Pengeluaran</span></h5>
+                                    <?php
+                                    include 'db.php';
+
+                                    $data = mysqli_query($conn, "SELECT SUM(jumlah) as total_pengeluaran from pengeluaran");
+                                    $hasil = mysqli_fetch_assoc($data);
+                                    $total_pengeluaran = $hasil['total_pengeluaran'] ?? 0;
+                                    ?>
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-cart"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>Rp <?= number_format($total_pengeluaran, 0, ',', '.'); ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div><!-- End Pengeluaran Card -->
 
                         <!-- Customers Card -->
                         <div class="col-xxl-4 col-xl-12">
@@ -216,7 +253,7 @@ session_start();
                             <div class="card top-selling overflow-auto">
                                 <!-- menampilkan list sekolah yg sudah byr iuran -->
                                 <?php
-                                include 'db.php';
+                                // require_once 'db.php';
 
                                 // ambil data yang bayar bulan ini
                                 $query = mysqli_query($conn, "
@@ -226,10 +263,11 @@ session_start();
                                             pembayaran.tgl_pembayaran,
                                             pembayaran.pembayaran_ke
                                         FROM pembayaran
-                                        JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah
-                                        WHERE MONTH(pembayaran.tgl_pembayaran) = MONTH(CURRENT_DATE())
-                                        AND YEAR(pembayaran.tgl_pembayaran) = YEAR(CURRENT_DATE())
-                                    ");
+                                        JOIN sekolah ON pembayaran.id = sekolah.id_sekolah
+                                        WHERE pembayaran.tgl_pembayaran >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                                        AND pembayaran.tgl_pembayaran < DATE_ADD(DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+                                        INTERVAL 1 MONTH)
+    ");
                                 ?>
                                 <div class="card-body pb-0">
                                     <h5 class="card-title">List <span>| Bayar iuran</span></h5>
@@ -254,7 +292,7 @@ session_start();
                                                 <tr>
                                                     <th scope="row"><?= $no++; ?></th>
                                                     <td><a href="#" class="text-primary fw-bold"><?= $data['nama_sekolah']; ?></a></td>
-                                                    <td><?= number_format($data['jumlah_pembayaran'], 0, ',', '.'); ?></td>
+                                                    <td>Rp. <?= number_format($data['jumlah_pembayaran'], 0, ',', '.'); ?></td>
                                                     <td class="fw-bold"><?= date('d-m-Y', strtotime($data['tgl_pembayaran'])); ?></td>
                                                     <td><?= $data['pembayaran_ke']; ?></td>
                                                 </tr>
@@ -267,9 +305,10 @@ session_start();
                                 </div>
 
                             </div>
-                        </div><!-- End Top Selling -->
+                        </div><!-- End sudah bayar -->
 
-                        <div class="col-12">
+                        <!-- Chart Pembayaran -->
+                        <div class="col-6">
                             <div class="card top-selling overflow-auto">
                                 <div class="card">
                                     <div class="card-body">
@@ -283,11 +322,11 @@ session_start();
 
                                 // Ambil total pembayaran per bulan
                                 $query = mysqli_query($conn, "
-    SELECT MONTH(tgl_pembayaran) AS bulan, SUM(jumlah_pembayaran) AS total 
-    FROM pembayaran 
-    GROUP BY MONTH(tgl_pembayaran)
-    ORDER BY bulan
-");
+                                    SELECT MONTH(tgl_pembayaran) AS bulan, SUM(jumlah_pembayaran) AS total 
+                                    FROM pembayaran 
+                                    GROUP BY MONTH(tgl_pembayaran)
+                                    ORDER BY bulan
+                                ");
 
                                 $bulan = [];
                                 $total = [];
@@ -300,13 +339,85 @@ session_start();
                                 }
                                 ?>
 
+                                <script>
+                                    const ctxPendapatan = document.getElementById('chartPendapatan').getContext('2d');
+                                    const chart = new Chart(ctxPendapatan, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: <?= json_encode($bulan); ?>,
+                                            datasets: [{
+                                                label: 'Total Pendapatan (Rp)',
+                                                data: <?= json_encode($total); ?>,
+                                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                                borderColor: 'rgba(54, 162, 235, 1)',
+                                                borderWidth: 1,
+                                                borderRadius: 8
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        callback: function(value) {
+                                                            return 'Rp ' + value.toLocaleString('id-ID');
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            plugins: {
+                                                legend: {
+                                                    display: true,
+                                                    labels: {
+                                                        color: '#333',
+                                                        font: {
+                                                            weight: 'bold'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
 
-                                <!-- Tambahkan CDN Chart.js -->
-                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <!-- chart pengeluaran -->
+                        <div class="col-6">
+                            <div class="card top-selling overflow-auto">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Grafik | Pengeluaran</h5>
+                                        <canvas id="chartPengeluaran" height="100"></canvas>
+                                    </div>
+                                </div>
+
+                                <?php
+                                include 'db.php';
+
+                                // Ambil total pengeluaran per bulan
+                                $query = mysqli_query($conn, "
+                                    SELECT MONTH(tgl) AS bulan, SUM(jumlah) AS total 
+                                    FROM pengeluaran 
+                                    GROUP BY MONTH(tgl)
+                                    ORDER BY bulan
+                                ");
+
+                                $bulan = [];
+                                $total = [];
+
+                                $nama_bulan = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+                                while ($row = mysqli_fetch_assoc($query)) {
+                                    $bulan[] = $nama_bulan[$row['bulan']];
+                                    $total[] = $row['total'];
+                                }
+                                ?>
 
                                 <script>
-                                    const ctx = document.getElementById('chartPendapatan').getContext('2d');
-                                    const chart = new Chart(ctx, {
+                                    const ctxPengeluaran = document.getElementById('chartPengeluaran').getContext('2d');
+                                    const chartPengeluaran = new Chart(ctxPengeluaran, {
                                         type: 'bar',
                                         data: {
                                             labels: <?= json_encode($bulan); ?>,
