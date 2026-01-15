@@ -192,6 +192,9 @@ include '../db.php';
                                                     <?php endwhile; ?>
                                                 </select>
 
+                                                <input type="number" name="jmlhGuru" id="jmlhGuru" autocomplete="off" placeholder="Masukkan jumlah guru..." class="form-control my-2">
+                                                <input type="number" name="iuranGuru" id="iuranGuru" autocomplete="off" placeholder="Iuran Perguru..." class="form-control my-2">
+
                                                 <!-- <input type="number" name="pembayaran" placeholder="Pembayaran ke- ..." autocomplete="off" class="form-control my-2"> -->
                                                 <label>Pembayaran untuk bulan:</label>
                                                 <div class="row">
@@ -222,7 +225,25 @@ include '../db.php';
                                                     ?>
                                                 </div>
                                                 <input type="date" name="tglBayar" placeholder="tgl bayar" autocomplete="off" class="form-control my-2">
-                                                <input type="text" name="jumlah" placeholder="Jumlah Pembayaran ..." autocomplete="off" class="form-control my-2">
+                                                <input type="text" id="totalBayar" placeholder="Total Pembayaran.." class="form-control my-2" readonly>
+
+                                                <!-- hitung otomatis ke totalbayar menggunajakan javascript -->
+                                                <script>
+                                                    const jmlhGuruInput = document.getElementById('jmlhGuru');
+                                                    const iuranInput = document.getElementById('iuranGuru');
+                                                    const totalInput = document.getElementById('totalBayar');
+
+                                                    function hitungTotal() {
+                                                        const jmlhGuru = parseInt(jmlhGuruInput.value) || 0;
+                                                        const iuran = parseInt(iuranInput.value) || 0;
+                                                        const total = jmlhGuru * iuran;
+
+                                                        totalInput.value = total.toLocaleString('id-ID');
+                                                    }
+
+                                                    jmlhGuruInput.addEventListener('input', hitungTotal);
+                                                    iuranInput.addEventListener('input', hitungTotal);
+                                                </script>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
@@ -284,7 +305,7 @@ include '../db.php';
 
                                 $no = 1;
                                 $pembayaran = mysqli_query($conn, "SELECT 
-                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah, sekolah.id_sekolah 
+                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_guru, pembayaran.iuran_per_guru, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah, sekolah.id_sekolah 
                                 FROM pembayaran
                                 JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
                                 $where ORDER BY pembayaran.tgl_pembayaran DESC");
