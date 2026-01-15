@@ -36,40 +36,76 @@
     <h2>Laporan Pembayaran Iuran Sekolah</h2>
 
     <table id="laporanTable" class="display nowrap" style="width:100%">
+        <?php
+        include '../db.php'; // sesuaikan path ke koneksi
+        $data = mysqli_query($conn, "SELECT 
+                                pembayaran.id AS id, 
+                                sekolah.nama_sekolah AS sumber, 
+                                pembayaran.pembayaran_ke AS keterangan, 
+                                pembayaran.tgl_pembayaran AS tanggal, 
+                                pembayaran.jumlah_pembayaran AS jumlah,
+                                'Masuk' AS tipe
+                                FROM pembayaran
+                                JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
+                                
+                                UNION ALL
+
+                                SELECT 
+                                pengeluaran.id_pengeluaran AS id,
+                                pengeluaran.tgl AS tanggal,
+                                '-' AS sumber,
+                                pengeluaran.keterangan AS keterangan,
+                                pengeluaran.jumlah AS jumlah,
+                                'Keluar' AS tipe
+                            FROM pengeluaran
+                            ORDER BY tanggal DESC");
+        ?>
         <thead>
             <tr>
                 <th>#</th>
-                <th>Nama Sekolah</th>
-                <th>Pembayaran Ke</th>
-                <th>Tgl Bayar</th>
+                <th>Tanggal</th>
+                <th>Tipe</th>
+                <th>Tujuan / Sumber</th>
+                <th>Keterangan</th>
                 <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            include '../db.php'; // sesuaikan path ke koneksi
-
             $no = 1;
-            $pembayaran = mysqli_query($conn, "SELECT 
-                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah 
-                                FROM pembayaran
-                                JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
-                                ORDER BY pembayaran.tgl_pembayaran DESC");
+            $totalMasuk = 0;
+            $totalKeluar = 0;
+
+            foreach ($data as $d) :
+                if ($d['tipe'] == 'Masuk') {
+                    $totalMasuk += $d['jumlah'];
+                } else {
+                    $totalKeluar += $d['jumlah'];
+                }
             ?>
-            <?php foreach ($pembayaran as $pem) :
-                $id = $pem['id']; ?>
                 <tr>
                     <td><?= $no++; ?></td>
-                    <td><?= $pem['nama_sekolah']; ?></td>
-                    <td><?= $pem['pembayaran_ke']; ?></td>
-                    <td><?= $pem['tgl_pembayaran']; ?></td>
-                    <td><?= $pem['jumlah_pembayaran']; ?></td>
+                    <td><?= $d['tanggal']; ?></td>
+                    <td>
+                        <?= $d['tipe'] == 'Masuk' ? '<span style="color:green"> Dana Masuk </span>' :
+                            '<span style="color:red"> Dana Keluar </span>'; ?>
+                    </td>
+                    <td><?= $d['sumber']; ?></td>
+                    <td><?= $d['keterangan']; ?></td>
+                    <td style="text-align: right;">
+                        Rp. <?= number_format($d['jumlah'], 0, ',', '.'); ?>
+                    </td>
                 </tr>
             <?php
             endforeach;
             ?>
         </tbody>
     </table>
+    <hr>
+    <h3>Ringkasan Keuangan</h3>
+    <p><strong>Total Dana Masuk:</strong> Rp <?= number_format($totalMasuk, 0, ',', '.'); ?></p>
+    <p><strong>Total Dana Keluar:</strong> Rp <?= number_format($totalKeluar, 0, ',', '.'); ?></p>
+    <p><strong>Saldo:</strong> Rp <?= number_format($totalMasuk - $totalKeluar, 0, ',', '.'); ?></p>
 
     <!-- jQuery + DataTables + Buttons -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
