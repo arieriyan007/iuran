@@ -33,6 +33,7 @@ include '../db.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
+
     <!-- Template Main CSS File -->
     <link href="../assets/css/style.css" rel="stylesheet">
 
@@ -237,100 +238,45 @@ include '../db.php';
                                 if (!empty($_GET['filter_bulan']) && !empty($_GET['filter_tahun'])) {
                                     $bulan = $_GET['filter_bulan'];
                                     $tahun = $_GET['filter_tahun'];
-                                    $where = "WHERE MONTH(pembayaran.tgl_pembayaran) = '$bulan' AND YEAR(pembayaran.tgl_pembayaran) = '$tahun'";
+                                    $where = "WHERE MONTH(pengeluaran.tgl) = '$bulan' AND YEAR(pengeluaran.tgl) = '$tahun'";
                                 }
 
                                 $no = 1;
-                                $pembayaran = mysqli_query($conn, "SELECT 
-                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah, sekolah.id_sekolah 
-                                FROM pembayaran
-                                JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
-                                $where ORDER BY pembayaran.tgl_pembayaran DESC");
+                                $danaKel = mysqli_query($conn, "SELECT * fROM pengeluaran ORDER BY tgl DESC");
                                 ?>
                                 <tbody>
-                                    <?php foreach ($pembayaran as $pem) :
-                                        $id = $pem['id'];
+                                    <?php
+                                    foreach ($danaKel as $dk) : $dk['id_pengeluaran'];
                                     ?>
-                                        <tr>
-                                            <td><?= $no++; ?></td>
-                                            <td><?= $pem['nama_sekolah']; ?></td>
-                                            <td><?= $pem['tgl_pembayaran']; ?></td>
-                                            <td><?= $pem['jumlah_pembayaran']; ?></td>
+                                        <tr class="align-middle">
+                                            <td class="fw-semibold text-muted">
+                                                <?= $no++; ?>
+                                            </td>
+
                                             <td>
-                                                <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi">Print</a>
-                                                <!-- edit -->
-                                                <!-- button modal -->
-                                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit<?= $id; ?>" title="Edit data iuran">
-                                                    <i class="bi bi-box-arrow-up"></i> Edit
-                                                </button>
-
-                                                <!-- edit modal -->
-                                                <div class="modal fade" id="edit<?= $id; ?>">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <!-- edit header -->
-                                                            <div class="modal-header">
-                                                                <h4 class="modal-title">Edit data iuaran</h4>
-                                                                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
-                                                            </div>
-
-                                                            <!-- edit body -->
-                                                            <form action="editIuran.php" method="post">
-                                                                <div class="modal-body">
-                                                                    <label for="sekolah">Pilih Sekolah :</label>
-                                                                    <select name="sekolah" id="sekolah" class="form-select">
-                                                                        <option><?= $pem['nama_sekolah']; ?></option>
-                                                                    </select>
-                                                                    <input type="hidden" name="id_sekolah" value="<?= $pem['id_sekolah']; ?>">
-                                                                    <!-- Bulan -->
-                                                                    <label class="mt-2">Pembayaran untuk bulan:</label>
-                                                                    <div class="row">
-                                                                        <?php
-                                                                        $bulanArr = [
-                                                                            'Januari',
-                                                                            'Februari',
-                                                                            'Maret',
-                                                                            'April',
-                                                                            'Mei',
-                                                                            'Juni',
-                                                                            'Juli',
-                                                                            'Agustus',
-                                                                            'September',
-                                                                            'Oktober',
-                                                                            'November',
-                                                                            'Desember'
-                                                                        ];
-                                                                        // menampilkan cekbox jika hasil nama bulan menggunakan spasi tambahkan array_map('trim', explod(',',$pem['pembayaran_ke])) : [];
-                                                                        $bulanDipilih = isset($pem) ? array_map('trim', explode(',', $pem['pembayaran_ke'])) : [];
-
-                                                                        foreach ($bulanArr as $bln) {
-                                                                            $checked = in_array($bln, $bulanDipilih) ? 'checked' : '';
-                                                                            echo '
-                                                                            <div class="col-md-4">
-                                                                                <div class="form-check">
-                                                                                    <input class="form-check-input" type="checkbox" name="pembayaran_ke[]" value="' . $bln . '" id="bulan_' . $bln . '" ' . $checked . '>
-                                                                                    <label class="form-check-label" for="bulan_' . $bln . '">' . $bln . '</label>
-                                                                                </div>
-                                                                            </div>';
-                                                                        }
-                                                                        ?>
-                                                                    </div>
-
-                                                                    <input type="date" name="tgl" class="my-2 form-control" value="<?= $pem['tgl_pembayaran']; ?>">
-                                                                    <input type="text" name="jumlah" placeholder="silahkan ubah jumlah biaya iuran..." value="<?= htmlspecialchars('Rp ' . $pem['jumlah_pembayaran']); ?>" class="form-control">
-                                                                    <input type="hidden" name="idi" value="<?= $id; ?>">
-                                                                </div>
-
-                                                                <!-- Edit footer -->
-                                                                <div class="modal-foter text-end mx-2 my-2">
-                                                                    <button class="btn btn-primary btn-sm" type="submit" name="update">Update</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
+                                                <div class="fw-semibold text-dark">
+                                                    <?= htmlspecialchars($dk['keterangan']); ?>
                                                 </div>
+                                            </td>
 
-                                                <a href="" class="btn btn-sm btn-danger" title="Hapus Data">Hapus</a>
+                                            <td>
+                                                <span class="badge-date">
+                                                    <?= date('d M Y', strtotime($dk['tgl'])); ?>
+                                                </span>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <span class="amount-out">
+                                                    Rp <?= number_format($dk['jumlah'], 0, ',', '.'); ?>
+                                                </span>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <a href="#"
+                                                    class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                                                    title="Print pengeluaran">
+                                                    <i class="bi bi-printer me-1"></i> Print
+                                                </a>
                                             </td>
                                         </tr>
                                     <?php
@@ -355,6 +301,30 @@ include '../db.php';
             new simpleDatatables.DataTable(myTable);
         });
     </script>
+
+    <!-- style tr dan td -->
+    <style>
+        .table tbody tr {
+            transition: background-color .2s ease, transform .15s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.003);
+        }
+
+        .badge-date {
+            background: #f1f3f5;
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .amount-out {
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
 
 
     <!-- Vendor JS Files -->

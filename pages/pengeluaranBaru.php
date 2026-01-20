@@ -3,9 +3,9 @@ include '../db.php';
 session_start();
 
 if (isset($_POST['addPengeluaran'])) {
-    $danaKeluar = $_POST['keterangan'];
-    $tglKeluar = $_POST['tgl'];
-    $jumlahKeluar = $_POST['jumlah'];
+    $danaKeluar = $_POST['danaKeluar'];
+    $tglKeluar = $_POST['tglKeluar'];
+    $jumlahKeluar = $_POST['jumlahKeluar'];
 
     $data = $conn->prepare("INSERT INTO pengeluaran (keterangan, tgl, jumlah) VALUES (?, ?, ?)");
     $data->bind_param("ssi", $danaKeluar, $tglKeluar, $jumlahKeluar);

@@ -319,7 +319,7 @@ include '../db.php';
                                             <td><?= $pem['nama_sekolah']; ?></td>
                                             <td><?= $pem['pembayaran_ke']; ?></td>
                                             <td><?= $pem['tgl_pembayaran']; ?></td>
-                                            <td><?= $pem['jumlah_pembayaran']; ?></td>
+                                            <td>Rp. <?= number_format($pem['jumlah_pembayaran'], 0, ',', '.'); ?></td>
                                             <td>
                                                 <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi">Print</a>
                                                 <!-- edit -->
