@@ -3,13 +3,13 @@
 include '../db.php';
 
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $id = (int) $_GET['id'];
     $query = mysqli_query($conn, "SELECT 
-        pembayaran.*, sekolah.nama_sekolah, users.nama
+        pembayaran.*, sekolah.nama_sekolah
         FROM pembayaran 
         JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah
-        JOIN users ON pembayaran.user = users.id 
-        WHERE pembayaran.id = '$id'");
+        -- JOIN users ON pembayaran.user = users.id 
+        WHERE pembayaran.id = '$id'") or die("SQL Error: " . mysqli_error($conn));
 
     $data = mysqli_fetch_assoc($query);
     if (!$data) {
@@ -32,81 +32,104 @@ if (isset($_GET['id'])) {
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #eef1f5;
-            margin: 0;
-            padding: 30px;
-            color: #333;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #fff;
+            color: #222;
         }
 
-        .container {
-            max-width: 800px;
+        .receipt {
+            width: 800px;
             margin: auto;
-            background: #fff;
             padding: 40px 50px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
             position: relative;
         }
 
         .logo {
+            /* display: block; */
             position: absolute;
-            top: 40px;
-            right: 50px;
-            width: 80px;
+            top: 25px;
+            right: 60px;
+            width: 120px;
         }
 
-        .header {
+        .title {
             text-align: center;
-            border-bottom: 2px solid #0077cc;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
         }
 
-        .header h2 {
-            color: #0077cc;
+        .title h1 {
+            font-size: 22px;
+            color: #0b66d6;
             margin: 0;
+            letter-spacing: 1px;
         }
 
-        .info p {
-            margin: 10px 0;
+        .title p {
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        hr {
+            margin: 25px 0 35px;
+            border: none;
+            border-top: 2px solid #0b66d6;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 15px;
         }
 
-        .label {
-            display: inline-block;
-            width: 180px;
+        .info-table td {
+            padding: 6px 0;
+            vertical-align: top;
+        }
+
+        .info-table td:first-child {
+            width: 220px;
             font-weight: 600;
         }
 
-        .total {
-            font-size: 18px;
-            margin-top: 20px;
-            font-weight: bold;
+        .info-table .total td {
+            padding-top: 14px;
+            font-size: 16px;
+            font-weight: 700;
         }
 
         .signature {
-            margin-top: 50px;
+            margin-top: 60px;
             text-align: right;
-            line-height: 1.5;
         }
 
-        .signature img {
-            width: 100px;
-            margin-top: 5px;
+        .signature .date,
+        .signature .role {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .signature .spacer {
+            height: 60px;
+        }
+
+        .signature .name {
+            font-weight: 700;
+            text-decoration: underline;
         }
 
         .footer {
+            margin-top: 50px;
             text-align: center;
             font-size: 12px;
-            margin-top: 40px;
-            color: #888;
+            color: #777;
         }
 
         @media print {
             body {
-                background: none;
                 margin: 0;
+            }
+
+            .receipt {
+                padding: 30px 40px;
             }
 
             .container {
@@ -114,34 +137,57 @@ if (isset($_GET['id'])) {
                 border: none;
             }
 
-            .logo {
-                display: none;
+            .tanggal {
+                margin-bottom: 4px;
             }
+
+            .jabatan {
+                margin-top: 0;
+            }
+
         }
     </style>
 </head>
 
 <body onload="window.print()">
 
-    <div class="container">
-        <img src="../assets/img/logo.png" alt="Logo" class="logo" />
+    <div class="receipt">
+        <img src="../assets/img/logo_pgri.png" class="logo" />
 
-        <div class="header">
-            <h2>KWITANSI PEMBAYARAN</h2>
-            <small>No: <?= 'KW-' . str_pad($data['id'], 3, '0', STR_PAD_LEFT); ?> | <?= date('d F Y'); ?></small>
+        <div class="title">
+            <h1>KWITANSI PEMBAYARAN</h1>
+            <p>No. <?= 'KW-' . str_pad($data['id'], 3, '0', STR_PAD_LEFT); ?>
+                | <?= date('dmY'); ?></p>
         </div>
 
-        <div class="info">
-            <p><span class="label">Nama Sekolah</span>: <?= $data['nama_sekolah']; ?></p>
-            <p><span class="label">Pembayaran Ke</span>: <?= $data['pembayaran_ke']; ?></p>
-            <p><span class="label">Tanggal Pembayaran</span>: <?= date('d-m-Y', strtotime($data['tgl_pembayaran'])); ?></p>
-            <p class="total"><span class="label">Jumlah Pembayaran</span>: Rp <?= number_format($data['jumlah_pembayaran'], 0, ',', '.'); ?></p>
-        </div>
+        <hr>
+
+        <table class="info-table">
+            <tr>
+                <td>Nama Sekolah</td>
+                <td>: <?= $data['nama_sekolah']; ?></td>
+            </tr>
+            <tr>
+                <td>Pembayaran Ke</td>
+                <td>: <?= $data['pembayaran_ke']; ?></td>
+            </tr>
+            <tr>
+                <td>Tanggal Pembayaran</td>
+                <td>: <?= date('d-m-Y', strtotime($data['tgl_pembayaran'])); ?></td>
+            </tr>
+            <tr class="total">
+                <td>Jumlah Pembayaran</td>
+                <td>: Rp <?= number_format($data['jumlah_pembayaran'], 0, ',', '.'); ?></td>
+            </tr>
+        </table>
 
         <div class="signature">
-            <p>Petugas,</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('ID: ' . $data['id'] . ', Nama Sekolah: ' . $data['nama_sekolah']) ?>" alt="QR Code">
-            <p><strong><?= $data['nama_sekolah']; ?></strong></p>
+            <p class="date">Binuang, <?= date('d-m-Y', strtotime($data['tgl_pembayaran'])); ?></p>
+            <p class="role">Bendahara PGRI Cab. Binuang</p>
+
+            <div class="spacer"></div>
+
+            <p class="name">Siti Patimah, S.Pd</p>
         </div>
 
         <div class="footer">

@@ -52,9 +52,9 @@
 
                                 SELECT 
                                 pengeluaran.id_pengeluaran AS id,
-                                pengeluaran.tgl AS tanggal,
-                                '-' AS sumber,
                                 pengeluaran.keterangan AS keterangan,
+                                '-' AS sumber,
+                                pengeluaran.tgl AS tanggal,
                                 pengeluaran.jumlah AS jumlah,
                                 'Keluar' AS tipe
                             FROM pengeluaran

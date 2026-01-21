@@ -136,7 +136,7 @@ require_once 'db.php';
             </li><!-- End kartu iuaran Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages/laporan.php">
+                <a class="nav-link collapsed" href="pages/laporan.php" target="_blank">
                     <i class="bi bi-file-earmark"></i>
                     <span>Laporan</span>
                 </a>
@@ -263,7 +263,7 @@ require_once 'db.php';
                                             pembayaran.tgl_pembayaran,
                                             pembayaran.pembayaran_ke
                                         FROM pembayaran
-                                        JOIN sekolah ON pembayaran.id = sekolah.id_sekolah
+                                        JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah
                                         WHERE pembayaran.tgl_pembayaran >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
                                         AND pembayaran.tgl_pembayaran < DATE_ADD(DATE_FORMAT(CURDATE(), '%Y-%m-01'),
                                         INTERVAL 1 MONTH)
@@ -312,7 +312,7 @@ require_once 'db.php';
                             <div class="card top-selling overflow-auto">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Grafik | Pendapatan per Bulan</h5>
+                                        <h5 class="card-title">Grafik | Tanggal Bayar</h5>
                                         <canvas id="chartPendapatan" height="100"></canvas>
                                     </div>
                                 </div>
@@ -322,8 +322,10 @@ require_once 'db.php';
 
                                 // Ambil total pembayaran per bulan
                                 $query = mysqli_query($conn, "
-                                    SELECT MONTH(tgl_pembayaran) AS bulan, SUM(jumlah_pembayaran) AS total 
-                                    FROM pembayaran 
+                                    SELECT MONTH(tgl_pembayaran) AS bulan, 
+                                    SUM(jumlah_pembayaran) AS total 
+                                    FROM pembayaran
+                                    WHERE YEAR(tgl_pembayaran) = YEAR(CURDATE()) 
                                     GROUP BY MONTH(tgl_pembayaran)
                                     ORDER BY bulan
                                 ");
@@ -331,11 +333,27 @@ require_once 'db.php';
                                 $bulan = [];
                                 $total = [];
 
-                                $nama_bulan = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                                $nama_bulan = [
+                                    1 => 'Jan',
+                                    2 => 'Feb',
+                                    3 => 'Mar',
+                                    4 => 'Apr',
+                                    5 => 'Mei',
+                                    6 => 'Jun',
+                                    7 => 'Jul',
+                                    8 => 'Agu',
+                                    9 => 'Sep',
+                                    10 => 'Okt',
+                                    11 => 'Nov',
+                                    12 => 'Des'
+                                ];
+
+                                $bulan = array_values($nama_bulan);
+                                $total = array_fill(0, 12, 0);
 
                                 while ($row = mysqli_fetch_assoc($query)) {
-                                    $bulan[] = $nama_bulan[$row['bulan']];
-                                    $total[] = $row['total'];
+                                    $index = (int)$row['bulan'] - 1; //index array mulai dari 0
+                                    $total[$index] = (int)$row['total'];
                                 }
                                 ?>
 
