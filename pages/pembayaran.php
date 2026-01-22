@@ -282,6 +282,29 @@ include '../db.php';
                             </form>
                             <!-- end filter -->
 
+                            <!-- style table -->
+                            <style>
+                                .badge-date {
+                                    background: #f1f3f5;
+                                    border-radius: 12px;
+                                    padding: 6px 12px;
+                                    font-size: 0.85rem;
+                                }
+
+                                .badge {
+                                    background: #31baf0;
+                                    border-radius: 10px;
+                                    padding: 6px 12px;
+                                    font-size: 1rem;
+                                }
+
+                                .amount-out {
+                                    color: #31baf0;
+                                    font-weight: 600;
+                                }
+                            </style>
+                            <!-- end style table -->
+
                             <!-- Primary Color Bordered Table -->
                             <table class="table table-bordered border-primary" id="myTable">
                                 <thead>
@@ -317,9 +340,21 @@ include '../db.php';
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td><?= $pem['nama_sekolah']; ?></td>
-                                            <td><?= $pem['pembayaran_ke']; ?></td>
-                                            <td><?= $pem['tgl_pembayaran']; ?></td>
-                                            <td>Rp. <?= number_format($pem['jumlah_pembayaran'], 0, ',', '.'); ?></td>
+                                            <td class="text-center">
+                                                <span class="badge">
+                                                    <?= $pem['pembayaran_ke']; ?>
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge-date">
+                                                    <?= $pem['tgl_pembayaran']; ?>
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="amount-out">
+                                                    Rp. <?= number_format($pem['jumlah_pembayaran'], 0, ',', '.'); ?>
+                                                </span>
+                                            </td>
                                             <td>
                                                 <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi">Print</a>
                                                 <!-- edit -->
