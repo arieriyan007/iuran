@@ -5,12 +5,15 @@ include '../db.php';
 if (isset($_POST['addPembayaran'])) {
     $sekolah = $_POST['sekolah'];
     $jmlhGuru = (int) $_POST['jmlhGuru'];
-    $iuranGuru = (int) $_POST['iuranGuru'];
     $bayar = $_POST['pembayaran_ke'];
     $tgl = $_POST['tglBayar'];
-    $jumlah = $jmlhGuru * $iuranGuru;
 
-    if ($sekolah && $jmlhGuru && $iuranGuru && $jumlah && $tgl && !empty($bayar)) {
+    // ubah biaya iuran jika dibutuhkan
+    $iuranGuru = 10000;
+
+    $jumlah = $jmlhGuru * $iuranGuru; // rumus hitung otomatis
+
+    if ($sekolah && $jmlhGuru > 0 && $jumlah > 0 && $tgl && !empty($bayar)) {
         // menggabungkan bulan saat di pilih pada cekbox
         $gabung_bulan = implode(", ", $bayar);
 

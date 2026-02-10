@@ -193,7 +193,7 @@ include '../db.php';
                                                 </select>
 
                                                 <input type="number" name="jmlhGuru" id="jmlhGuru" autocomplete="off" placeholder="Masukkan jumlah guru..." class="form-control my-2">
-                                                <input type="number" name="iuranGuru" id="iuranGuru" autocomplete="off" placeholder="Iuran Perguru..." class="form-control my-2">
+                                                <input type="hidden" name="iuranGuru" id="iuranGuru" class="form-control my-2" value="10000" readonly>
 
                                                 <!-- <input type="number" name="pembayaran" placeholder="Pembayaran ke- ..." autocomplete="off" class="form-control my-2"> -->
                                                 <label>Pembayaran untuk bulan:</label>
