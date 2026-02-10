@@ -263,11 +263,10 @@ require_once 'db.php';
                                             pembayaran.tgl_pembayaran,
                                             pembayaran.pembayaran_ke
                                         FROM pembayaran
-                                        JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah
-                                        WHERE pembayaran.tgl_pembayaran >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
-                                        AND pembayaran.tgl_pembayaran < DATE_ADD(DATE_FORMAT(CURDATE(), '%Y-%m-01'),
-                                        INTERVAL 1 MONTH)
-    ");
+                                        INNER JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah                                  
+                                        WHERE MONTH(pembayaran.tgl_pembayaran) = MONTH(CURDATE())
+                                        AND YEAR(pembayaran.tgl_pembayaran) = YEAR(CURDATE())
+                                        ");
                                 ?>
                                 <div class="card-body pb-0">
                                     <h5 class="card-title">List <span>| Bayar iuran</span></h5>
@@ -285,6 +284,9 @@ require_once 'db.php';
                                         <tbody>
                                             <?php
                                             $no = 1;
+                                            if (!$query) {
+                                                die("Query Error: " . mysqli_error($conn));
+                                            }
                                             while ($data = mysqli_fetch_assoc($query)) {
                                                 # code...
 
