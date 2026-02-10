@@ -168,7 +168,7 @@ if (isset($_GET['id'])) {
                 <td>: <?= $data['nama_sekolah']; ?></td>
             </tr>
             <tr>
-                <td>Pembayaran Ke</td>
+                <td>Pembayaran Bulan</td>
                 <td>: <?= $data['pembayaran_ke']; ?></td>
             </tr>
             <tr>

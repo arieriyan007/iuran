@@ -323,15 +323,26 @@ include '../db.php';
                                 if (!empty($_GET['filter_bulan']) && !empty($_GET['filter_tahun'])) {
                                     $bulan = $_GET['filter_bulan'];
                                     $tahun = $_GET['filter_tahun'];
-                                    $where = "WHERE MONTH(pembayaran.tgl_pembayaran) = '$bulan' AND YEAR(pembayaran.tgl_pembayaran) = '$tahun'";
+                                    $where = "WHERE MONTH(pembayaran.tgl_pembayaran) = $bulan AND YEAR(pembayaran.tgl_pembayaran) = $tahun";
                                 }
 
                                 $no = 1;
                                 $pembayaran = mysqli_query($conn, "SELECT 
-                                pembayaran.id, pembayaran.pembayaran_ke, pembayaran.tgl_pembayaran, pembayaran.jumlah_guru, pembayaran.iuran_per_guru, pembayaran.jumlah_pembayaran, sekolah.nama_sekolah, sekolah.id_sekolah 
+                                pembayaran.id, 
+                                pembayaran.pembayaran_ke, 
+                                pembayaran.tgl_pembayaran, 
+                                pembayaran.jumlah_guru, 
+                                pembayaran.iuran_per_guru, 
+                                pembayaran.jumlah_pembayaran, 
+                                sekolah.nama_sekolah,
+                                sekolah.id_sekolah
                                 FROM pembayaran
-                                JOIN sekolah ON pembayaran.nama_sekolah = sekolah.id_sekolah 
+                                INNER JOIN sekolah ON sekolah.id_sekolah=pembayaran.nama_sekolah 
                                 $where ORDER BY pembayaran.tgl_pembayaran DESC");
+
+                                if (!$pembayaran) {
+                                    die("Query error: " . mysqli_error($conn));
+                                }
                                 ?>
                                 <tbody>
                                     <?php foreach ($pembayaran as $pem) :
