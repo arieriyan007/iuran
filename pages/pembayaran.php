@@ -319,11 +319,22 @@ include '../db.php';
                                 </thead>
                                 <?php
                                 // filter berdasarkan tgl
-                                $where = "";
-                                if (!empty($_GET['filter_bulan']) && !empty($_GET['filter_tahun'])) {
-                                    $bulan = $_GET['filter_bulan'];
-                                    $tahun = $_GET['filter_tahun'];
-                                    $where = "WHERE MONTH(pembayaran.tgl_pembayaran) = $bulan AND YEAR(pembayaran.tgl_pembayaran) = $tahun";
+                                $where = [];
+                                // filter bulan
+                                if (!empty($_GET['filter_bulan'])) {
+                                    $bulan = (int) $_GET['filter_bulan'];
+                                    $where[] = "MONTH(pembayaran.tgl_pembayaran) = $bulan";
+                                }
+
+                                // filter berdasarkan tahun
+                                if (!empty($_GET['filter_tahun'])) {
+                                    $tahun = (int) $_GET['filter_tahun'];
+                                    $where[] = "YEAR(pembayaran.tgl_pembayaran) = $tahun";
+                                }
+
+                                $filterbulantahun = "";
+                                if (!empty($where)) {
+                                    $filterbulantahun = "WHERE " . implode(" AND ", $where);
                                 }
 
                                 $no = 1;
@@ -338,7 +349,7 @@ include '../db.php';
                                 sekolah.id_sekolah
                                 FROM pembayaran
                                 INNER JOIN sekolah ON sekolah.id_sekolah=pembayaran.nama_sekolah 
-                                $where ORDER BY pembayaran.id DESC");
+                                $filterbulantahun ORDER BY pembayaran.id DESC");
 
                                 if (!$pembayaran) {
                                     die("Query error: " . mysqli_error($conn));
