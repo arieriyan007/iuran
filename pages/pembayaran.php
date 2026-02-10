@@ -338,7 +338,7 @@ include '../db.php';
                                 sekolah.id_sekolah
                                 FROM pembayaran
                                 INNER JOIN sekolah ON sekolah.id_sekolah=pembayaran.nama_sekolah 
-                                $where ORDER BY pembayaran.tgl_pembayaran DESC");
+                                $where ORDER BY pembayaran.tgl_pembayaran ASC");
 
                                 if (!$pembayaran) {
                                     die("Query error: " . mysqli_error($conn));
