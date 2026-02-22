@@ -284,9 +284,11 @@ require_once 'db.php';
                                         <tbody>
                                             <?php
                                             $no = 1;
+
                                             if (!$query) {
                                                 die("Query Error: " . mysqli_error($conn));
                                             }
+                                            
                                             while ($data = mysqli_fetch_assoc($query)) {
                                                 # code...
 
