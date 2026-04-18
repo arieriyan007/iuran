@@ -403,6 +403,8 @@ include '../db.php';
                                                                         <option><?= $pem['nama_sekolah']; ?></option>
                                                                     </select>
                                                                     <input type="hidden" name="id_sekolah" value="<?= $pem['id_sekolah']; ?>">
+                                                                    <label for="">Jumlah Guru</label>
+                                                                    <input type="text" class="mt-2 form-control" name="jumlahGuru" value="<?= $pem['jumlah_guru']; ?> Orang" readonly>
                                                                     <!-- Bulan -->
                                                                     <label class="mt-2">Pembayaran untuk bulan:</label>
                                                                     <div class="row">
@@ -438,7 +440,7 @@ include '../db.php';
                                                                     </div>
 
                                                                     <input type="date" name="tgl" class="my-2 form-control" value="<?= $pem['tgl_pembayaran']; ?>">
-                                                                    <input type="text" name="jumlah" placeholder="silahkan ubah jumlah biaya iuran..." value="<?= htmlspecialchars('Rp ' . $pem['jumlah_pembayaran']); ?>" class="form-control">
+                                                                    <input type="text" name="jumlah" placeholder="silahkan ubah jumlah biaya iuran..." value="<?= htmlspecialchars('Rp ' . $pem['jumlah_pembayaran']); ?>" class="form-control" readonly>
                                                                     <input type="hidden" name="idi" value="<?= $id; ?>">
                                                                 </div>
 

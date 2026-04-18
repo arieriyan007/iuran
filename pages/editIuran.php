@@ -3,30 +3,46 @@
 include '../db.php';
 
 if (isset($_POST['update'])) {
-    $id = $_POST['idi'];
-    // $sekolah = $_POST['sekolah'];
-    $bulan = implode(", ", $_POST['pembayaran_ke']);
+    $id = (int) $_POST['idi'];
+
+    // kondisi ambil bulan
+    $bulan = !empty($_POST['pembayaran_ke'])
+    ? implode(", ", $_POST['pembayaran_ke']) : "";
+
     $tgl = $_POST['tgl'];
-    $jumlah = $_POST['jumlah'];
 
-    // ambil data jumlah_bayaran lama
-    $query = mysqli_query($conn, "SELECT jumlah_pembayaran FROM pembayaran WHERE id = '$id'");
-    $datalama = mysqli_fetch_assoc($query);
-    $jumlah_lama = $datalama['jumlah_pembayaran'];
+ // bersihkan format rupiah 
+    $jumlah_input = $_POST['jumlah'] ?? '';
+    $jumlah = preg_replace('/[^0-9]/', '', $jumlah_input);
 
-    // gunakan jumlah lama jika tidak ada update pembayaran baru
-    if (empty($jumlah)) {
-        $jumlah = $jumlah_lama;
+    // fallback kalo data pake 0
+    $jumlah = $jumlah !== '' ? (int)$jumlah : 0;
+
+    // ambil data lama
+    $ambil = mysqli_query($conn, "SELECT jumlah_guru FROM pembayaran WHERE id= $id");
+    if (!$ambil) {
+        die("Data query gagal: " . mysqli_error($conn));
     }
+    $data = mysqli_fetch_assoc($ambil);
+    $jumlahGuru = $data['jumlah_guru'];
+    $jumlah = $jumlahGuru * 10000;
 
-    // update data
-    $update = mysqli_query($conn, "UPDATE pembayaran SET 
-    -- nama_sekolah = '$sekolah',
+    
+
+    // update
+    $update = mysqli_query($conn, " UPDATE pembayaran SET 
     pembayaran_ke = '$bulan',
     tgl_pembayaran = '$tgl',
-    jumlah_pembayaran = '$jumlah'
-    WHERE id = $id
-    ");
+    jumlah_pembayaran = '$jumlah' WHERE id = $id ");
 
-    header("location:pembayaran.php?status=updated");
+    // debug jika gagal update
+    if (!$update) {
+        die("Update gagal: " . mysqli_error($conn));
+    }
+
+    // notifikasi jika berhasil edit pembayaran
+    echo "<script>
+        alert('Data berhasil diupdate');
+        window.location.href='pembayaran.php';
+    </script>";
 }
