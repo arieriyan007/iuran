@@ -338,6 +338,7 @@ include '../db.php';
                                 }
 
                                 $no = 1;
+                                // query 
                                 $pembayaran = mysqli_query($conn, "SELECT 
                                 pembayaran.id, 
                                 pembayaran.pembayaran_ke, 
@@ -453,7 +454,7 @@ include '../db.php';
                                                     </div>
                                                 </div>
 
-                                                <a href="" class="btn btn-sm btn-danger" title="Hapus Data">Hapus</a>
+                                                <a href="hapusPembayaran.php?id=<?= $id; ?>" class="btn btn-sm btn-danger" title="Hapus Data" onclick="return confirm('Yakin ingin menghapus data ini ?')" >Hapus</a>
                                             </td>
                                         </tr>
                                     <?php
