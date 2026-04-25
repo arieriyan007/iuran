@@ -41,6 +41,8 @@ include '../db.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css">
     <!-- modal -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
@@ -407,10 +409,10 @@ include '../db.php';
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi"><i class="bi bi-printer"></i> Print</a>
+                                                <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-outline-success btn-sm rounded-pill px-3" target="_blank" title="Cetak Kwitansi"><i class="bi bi-printer"></i> Print</a>
                                                 <!-- edit -->
                                                 <!-- button modal -->
-                                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit<?= $id; ?>" title="Edit data iuran">
+                                                <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#edit<?= $id; ?>" title="Edit data iuran">
                                                     <i class="bi bi-box-arrow-up"></i> Edit
                                                 </button>
 
@@ -475,14 +477,14 @@ include '../db.php';
 
                                                                 <!-- Edit footer -->
                                                                 <div class="modal-foter text-end mx-2 my-2">
-                                                                    <button class="btn btn-primary btn-sm" type="submit" name="update">Update</button>
+                                                                    <button class="btn btn-danger btn-sm" type="submit" name="update">Update</button>
                                                                 </div>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <a href="#" class="btn btn-sm btn-danger" title="Hapus Data" onclick="confirmDelete(<?= $id; ?>)" ><i class="bi bi-trash"></i> Hapus</a>
+                                                <a href="#" class="btn btn-outline-danger btn-sm rounded-pill px-3" title="Hapus Data" onclick="confirmDelete(<?= $id; ?>)" ><i class="bi bi-trash"></i> Hapus</a>
 
                                                 <!-- script button delete -->
                                                  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
