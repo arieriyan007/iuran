@@ -1,4 +1,5 @@
 <?php
+session_start();
 // require_once '../auth.php';
 include '../db.php';
 ?>
@@ -148,6 +149,33 @@ include '../db.php';
                 </ol>
             </nav>
         </div><!-- End Page Title -->
+
+        <!-- notifikasi sweet alert -->
+         <!-- notif berhasil -->
+         <?php if (isset($_SESSION['success'])): ?>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: '<?= $_SESSION['success']; ?>',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            </script>
+            <?php unset($_SESSION['success']); endif; ?>
+
+            <!-- notif gagal -->
+             <?php if(isset($_SESSION['error'])) : ?>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: '<?= $_SESSION['error']; ?>'
+                    })
+                </script>
+                <?php unset($_SESSION['error']); endif; ?>
 
         <section class="section">
             <div class="row">
@@ -379,7 +407,7 @@ include '../db.php';
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi">Print</a>
+                                                <a href="print_kwitansi.php?id=<?= $pem['id']; ?>" class="btn btn-sm btn-success" target="_blank" title="Cetak Kwitansi"><i class="bi bi-printer"></i> Print</a>
                                                 <!-- edit -->
                                                 <!-- button modal -->
                                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit<?= $id; ?>" title="Edit data iuran">
@@ -454,7 +482,27 @@ include '../db.php';
                                                     </div>
                                                 </div>
 
-                                                <a href="hapusPembayaran.php?id=<?= $id; ?>" class="btn btn-sm btn-danger" title="Hapus Data" onclick="return confirm('Yakin ingin menghapus data ini ?')" >Hapus</a>
+                                                <a href="#" class="btn btn-sm btn-danger" title="Hapus Data" onclick="confirmDelete(<?= $id; ?>)" ><i class="bi bi-trash"></i> Hapus</a>
+
+                                                <!-- script button delete -->
+                                                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                 <script>
+                                                    function confirmDelete(id) {
+                                                        Swal.fire({
+                                                            title: 'Yakin?',
+                                                            text: "Data akan dihapus permanen !",
+                                                            icon: 'wwarning',
+                                                            showCancelButton: true,
+                                                            confirmButtonText: 'Ya, hapus!',
+                                                            cancelButtonText: 'Batal'
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                window.location.href = 'hapusPembayaran.php?id=' + id;
+                                                            }
+                                                        });
+                                                    }
+                                                 </script>
+
                                             </td>
                                         </tr>
                                     <?php
