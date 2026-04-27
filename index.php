@@ -1,7 +1,7 @@
 <?php
-// require_once 'auth.php';
+session_start();
+require_once 'auth.php';
 require_once 'db.php';
-// session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,7 +86,7 @@ require_once 'db.php';
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="../logout.php">
+                            <a class="dropdown-item d-flex align-items-center" href="logout.php">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Sign Out</span>
                             </a>
