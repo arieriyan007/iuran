@@ -1,4 +1,12 @@
-<?php session_start(); ?>
+<?php session_start(); 
+
+// jika sudah login wajib logout terlebih dahulu
+if (isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -99,7 +107,7 @@
      <!-- Password -->
       <div class="mb-3 input-group">
         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-        <input id="password" type="text" class="form-control" name="password" placeholder="Password" required>
+        <input id="password" type="password" class="form-control" name="password" placeholder="Password" required>
         <!-- membuat eye password -->
         <span class="input-group-text" onclick="togglePassword()" style="cursor:pointer;"><i class="bi bi-eye" id="iconEye"></i></span>
       </div>

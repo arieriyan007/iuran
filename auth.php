@@ -1,9 +1,9 @@
 <?php
-session_start();
 
-// if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
-//     header("location: login.php");
-//     exit; }
+// ini dibuat agar jika session_start(); terlalu banyak itu bisa di ignore
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
