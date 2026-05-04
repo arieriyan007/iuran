@@ -3,6 +3,7 @@ session_start();
 require_once 'auth.php';
 require_once 'db.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +17,7 @@ require_once 'db.php';
 
     <!-- Favicons -->
     <link href="assets/img/logo_pgri.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="ßassets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -106,13 +107,13 @@ require_once 'db.php';
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="../index.php">
+                <a class="nav-link " href="index.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
 
-            <li class="nav-heading">Menu</li>
+            <li class="nav-heading">Iuran</li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="pages/pembayaran.php">
@@ -141,6 +142,34 @@ require_once 'db.php';
                     <span>Laporan</span>
                 </a>
             </li><!-- End laporan Page Nav -->
+
+        </ul>
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="index.php">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+
+            <li class="nav-heading">Berkas</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="document/suratMasuk.php">
+                    <i class="bi bi-file-earmark-arrow-down"></i>
+                    <span>Surat Masuk</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="document/suratKeluar.php">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                    <span>Surat Keluar</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+
 
         </ul>
 
