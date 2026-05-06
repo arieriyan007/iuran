@@ -11,7 +11,7 @@
 
     <!-- Favicons -->
     <link href="../assets/img/logo_pgri.png" rel="icon">
-    <link href="../ßassets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -41,7 +41,7 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a href="index.php" class="logo d-flex align-items-center">
-                <img src="assets/img/logo_pgri.png" alt="">
+                <img src="../assets/img/logo_pgri.png" alt="">
                 <span class="d-none d-lg-block">Iuran PGRI</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -67,7 +67,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="assets/img/kosong.jpg" alt="Profile" class="rounded-circle">
+                        <img src="../assets/img/kosong.jpg" alt="Profile" class="rounded-circle">
                         <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['username'] ?? 'SDN PP 2'; ?></span>
                     </a><!-- End Profile Iamge Icon -->
 
@@ -81,7 +81,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="logout.php">
+                            <a class="dropdown-item d-flex align-items-center" href="../logout.php">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Sign Out</span>
                             </a>
@@ -110,28 +110,28 @@
             <li class="nav-heading">Iuran</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages/pembayaran.php">
+                <a class="nav-link collapsed" href="../pages/pembayaran.php">
                     <i class="bi bi-person"></i>
                     <span>Pembayaran</span>
                 </a>
             </li><!-- End Profile Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages/pengeluaran.php">
+                <a class="nav-link collapsed" href="../pages/pengeluaran.php">
                     <i class="bi bi-person"></i>
                     <span>Pengeluaran</span>
                 </a>
             </li><!-- End Profile Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages/kartu_iuran.php" target="_blank">
+                <a class="nav-link collapsed" href="../pages/kartu_iuran.php" target="_blank">
                     <i class="bi bi-printer"></i>
                     <span>Kartu Iuran</span>
                 </a>
             </li><!-- End kartu iuaran Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages/laporan.php" target="_blank">
+                <a class="nav-link collapsed" href="../pages/laporan.php" target="_blank">
                     <i class="bi bi-file-earmark"></i>
                     <span>Laporan</span>
                 </a>
@@ -142,7 +142,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="index.php">
+                <a class="nav-link" href="../index.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -151,14 +151,14 @@
             <li class="nav-heading">Berkas</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="document/suratMasuk.php">
+                <a class="nav-link collapsed" href="../document/suratMasuk.php">
                     <i class="bi bi-file-earmark-arrow-down"></i>
                     <span>Surat Masuk</span>
                 </a>
             </li><!-- End Profile Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="document/suratKeluar.php">
+                <a class="nav-link collapsed" href="../document/suratKeluar.php">
                     <i class="bi bi-file-earmark-arrow-up"></i>
                     <span>Surat Keluar</span>
                 </a>

@@ -4,25 +4,46 @@ include "db.php";
 
 //ambil data login di login.php
 $username = trim($_POST['username']);
-$password = md5(trim($_POST['password']));
+$password = trim($_POST['password']);
 
-// koneksi login
-$login = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'
-AND password = '$password' ");
+// prepared untuk kunci sql injection dan koneksi ke db
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
 
-$cek = mysqli_num_rows($login);
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
 
-if ($cek > 0) {
+if ($user) {
+    $login = false;
 
-    $data = mysqli_fetch_assoc($login);
-    $_SESSION['id'] = $data['id'];
-    $_SESSION['username'] = $data['username'];
-    $_SESSION['nama'] = $data['nama'];
+    // cek password hash
+    if (password_verify($password, $user['password'])) {
+        $login = true;
+
+        // cek password md5 lama
+    } elseif (md5($password) === $user['password']) {
+        $login = true;
+
+        // ubah ke password hash dari md5
+        $newHash = password_hash($password, PASSWORD_DEFAULT);
+
+        $update = $conn->prepare("UPDATE users SET password=? WHERE id=?");
+        $update->bind_param("si", $newHash, $user['id']);
+        $update->execute();
+    }
+
+    if ($login) {
+    $_SESSION['id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['nama'] = $user['nama'];
 
     header("Location:index.php?alert=login");
     exit;
-} else {
-    $_SESSION['error'] = 'Password atau Username salah!';
-    header("Location:login.php?alert=gagal");
-    exit;
+    }   
 }
+
+// gagal login notifikasi
+$_SESSION['error'] = "Username dan password salah";
+header("Location:login.php");
+exit;
