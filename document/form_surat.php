@@ -1,7 +1,12 @@
 <?php
 session_start();
 require "../layouts/header.php";
+include "../function.php";
+$no_surat = generateNoSurat($conn);
+
+// ambil surat berdasarkan jenis
 $jenis = $_GET['jenis'] ?? '';
+
 ?>
 <main class="main" id="main">
 
@@ -12,7 +17,7 @@ $jenis = $_GET['jenis'] ?? '';
     <input type="hidden" class="" name="jenis_surat" value="<?= $jenis ?>">
 
     <!-- umum -->
-     <input type="text" name="no_surat" class="form-control mb-2" placeholder="Nomor Surat">
+     <input type="text" name="no_surat" class="form-control mb-2 text-mute" value="<?= $no_surat ?>" readonly>
      <input type="text" name="perihal" class="form-control mb-2" placeholder="Prihal">
      <textarea name="isi_surat" class="form-control mb-2" placeholder="Isi Surat"></textarea>
 
